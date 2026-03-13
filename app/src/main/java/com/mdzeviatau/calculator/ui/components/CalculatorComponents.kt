@@ -1,7 +1,7 @@
 package com.mdzeviatau.calculator.ui.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -27,8 +27,8 @@ fun NumpadRow(
     Row(modifier = modifier.fillMaxWidth()) {
         val btnModifier = Modifier
             .weight(1f)
-            .padding(2.dp)
-            .aspectRatio(1f)
+            .padding(4.dp)
+            .fillMaxHeight()
 
         NumButton(
             text = t1,
@@ -66,7 +66,9 @@ fun NumButton(
     onClick: () -> Unit
 ) {
     Button(
-        onClick = onClick, modifier = modifier, colors = ButtonDefaults.buttonColors(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
             containerColor = containerColor, contentColor = textColor
         )
     ) {
