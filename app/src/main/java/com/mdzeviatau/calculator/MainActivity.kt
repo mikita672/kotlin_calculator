@@ -12,14 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mdzeviatau.calculator.ui.theme.CalculatorTheme
+
+val NumbersColor = Color(149, 139, 255, 255)
+val SecondaryOperationsColor = Color(39, 32, 94, 255)
+val PrimaryOperationsColor = Color(88, 75, 236, 255)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainView(modifier: Modifier = Modifier){
-    Column {
+    Column(modifier = modifier) {
         Display(Modifier.padding(30.dp).height(250.dp))
         Numpad(Modifier.fillMaxSize())
     }
@@ -58,41 +64,33 @@ fun Display(modifier: Modifier = Modifier){
 @Composable
 fun Numpad(modifier: Modifier = Modifier){
     Column(modifier = modifier) {
-        NumpadRow("AC", "()", "%", "/", Modifier.fillMaxWidth())
-        NumpadRow("1", "2", "3","*", Modifier.fillMaxWidth())
-        NumpadRow("4", "5", "6", "-", Modifier.fillMaxWidth())
-        NumpadRow("7", "8", "9", "+", Modifier.fillMaxWidth())
-        NumpadRow("+/-", "0", ",", "=", Modifier.fillMaxWidth())
+        NumpadRow("AC", "()", "%", "/", Color.White, SecondaryOperationsColor, PrimaryOperationsColor)
+        NumpadRow("1", "2", "3", "*", Color.White, NumbersColor, PrimaryOperationsColor)
+        NumpadRow("4", "5", "6", "-", Color.White, NumbersColor, PrimaryOperationsColor)
+        NumpadRow("7", "8", "9", "+", Color.White, NumbersColor, PrimaryOperationsColor)
+        NumpadRow("+/-", "0", ",", "=", Color.White, NumbersColor, PrimaryOperationsColor)
     }
 }
 
 @Composable
-fun NumpadRow(textButton1: String, textButton2: String, textButton3: String, textButton4: String, modifier: Modifier = Modifier){
+fun NumpadRow(
+    t1: String, t2: String, t3: String, t4: String,
+    textColor: Color, bgColor: Color, opColor: Color,
+    modifier: Modifier = Modifier
+){
     Row(modifier = modifier) {
-        NumButton({}, textButton1, Modifier
-            .weight(1f)
-            .padding(3.dp)
-            .height(100.dp))
-        NumButton({}, textButton2, Modifier
-            .weight(1f)
-            .padding(3.dp)
-            .height(100.dp)
-        )
-        NumButton({}, textButton3, Modifier
-            .weight(1f)
-            .padding(3.dp)
-            .height(100.dp)
-        )
-        NumButton({}, textButton4, Modifier
-            .weight(1f)
-            .padding(3.dp)
-            .height(100.dp))
+        val btnModifier = Modifier.weight(1f).padding(4.dp).height(90.dp)
+
+        NumButton({}, t1, textColor, bgColor, btnModifier)
+        NumButton({}, t2, textColor, bgColor, btnModifier)
+        NumButton({}, t3, textColor, bgColor, btnModifier)
+        NumButton({}, t4, Color.White, opColor, btnModifier)
     }
 }
 
 @Composable
-fun NumButton(onClick:() -> Unit, text: String, modifier: Modifier = Modifier){
-    Button(onClick = {onClick()}, modifier=modifier){
+fun NumButton(onClick:() -> Unit, text: String, textColor: Color, containerColor: Color, modifier: Modifier = Modifier){
+    Button(onClick = {onClick()}, modifier=modifier, colors= ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = textColor)){
         Text(text, fontSize = 30.sp)
     }
 }
