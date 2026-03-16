@@ -12,9 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mdzeviatau.calculator.ui.viewmodel.CalculatorAction
 
 @Composable
 fun NumpadRow(
+    modifier: Modifier = Modifier,
     t1: String,
     t2: String,
     t3: String,
@@ -22,8 +24,15 @@ fun NumpadRow(
     textColor: Color,
     bgColor: Color,
     opColor: Color,
-    modifier: Modifier = Modifier
+    onAction: (CalculatorAction) -> Unit
 ) {
+    val getAction: (String) -> CalculatorAction = { text ->
+        when (text) {
+            "AC" -> CalculatorAction.Clear
+            "=" -> CalculatorAction.Calculate
+            else -> CalculatorAction.Input(text)
+        }
+    }
     Row(modifier = modifier.fillMaxWidth()) {
         val btnModifier = Modifier
             .weight(1f)
@@ -35,34 +44,34 @@ fun NumpadRow(
             textColor = textColor,
             containerColor = bgColor,
             modifier = btnModifier,
-            onClick = {})
+            onClick = { onAction(getAction(t1)) })
         NumButton(
             text = t2,
             textColor = textColor,
             containerColor = bgColor,
             modifier = btnModifier,
-            onClick = {})
+            onClick = { onAction(getAction(t2)) })
         NumButton(
             text = t3,
             textColor = textColor,
             containerColor = bgColor,
             modifier = btnModifier,
-            onClick = {})
+            onClick = { onAction(getAction(t3)) })
         NumButton(
             text = t4,
             textColor = Color.White,
             containerColor = opColor,
             modifier = btnModifier,
-            onClick = {})
+            onClick = { onAction(getAction(t4)) })
     }
 }
 
 @Composable
 fun NumButton(
+    modifier: Modifier = Modifier,
     text: String,
     textColor: Color,
     containerColor: Color,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Button(
