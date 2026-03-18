@@ -18,6 +18,22 @@ class CalculatorViewModel : ViewModel() {
             is CalculatorAction.Input -> {
                 val inputVal = if (action.value == ",") "." else action.value
                 val finalInput = if (inputVal == "+/-") "-" else inputVal
+                val currentExpression = _state.value.expression
+                val symbols = listOf("+", "-", "*", "/", ".", "%")
+
+                if (currentExpression.isEmpty() && finalInput in listOf("+", "*", "/", ".", "-")) {
+                    return
+                }
+
+                if (currentExpression.isNotEmpty()) {
+                    val lastChar = currentExpression.last().toString()
+
+                    if (finalInput in symbols && lastChar in symbols) {
+                        _state.value =
+                            _state.value.copy(expression = currentExpression.dropLast(1) + finalInput)
+                        return
+                    }
+                }
 
                 _state.value = _state.value.copy(
                     expression = _state.value.expression + finalInput
