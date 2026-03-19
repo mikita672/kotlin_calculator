@@ -58,8 +58,17 @@ class CalculatorViewModel : ViewModel() {
             is CalculatorAction.Calculate -> {
                 Log.d("Calculator", "Calculate button pressed")
                 try {
-                    val expression = ExpressionBuilder(_state.value.expression).build()
+                    var textToCalculate = _state.value.expression
+                    val openCount = textToCalculate.count { it == '(' }
+                    val closeCount = textToCalculate.count { it == ')' }
+
+                    if (openCount > closeCount) {
+                        textToCalculate += ")".repeat(openCount - closeCount)
+                    }
+
+                    val expression = ExpressionBuilder(textToCalculate).build()
                     val result = expression.evaluate()
+
                     val resultStr = if (result == result.toLong().toDouble()) {
                         result.toLong().toString()
                     } else {
@@ -74,22 +83,35 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.ToggleSign -> {
                 Log.d("Toggle Sign", "Parentheses button pressed")
-                val currentExpression = _state.value.expression
+                var currentExpression = _state.value.expression
 
-                if (currentExpression.isEmpty()) {
-                    _state.value = _state.value.copy(expression = "-", isResult = false)
+                if (_state.value.isResult) {
+                    currentExpression = if (currentExpression.startsWith("-")) {
+                        currentExpression.substring(1)
+                    } else {
+                        "-$currentExpression"
+                    }
+                    _state.value =
+                        _state.value.copy(expression = currentExpression, isResult = false)
                     return
                 }
 
-                if (currentExpression.startsWith("-")) {
-                    _state.value = _state.value.copy(
-                        expression = currentExpression.substring(1), isResult = false
-                    )
-                } else {
-                    _state.value = _state.value.copy(
-                        expression = "-$currentExpression", isResult = false
-                    )
+                var splitIndex = currentExpression.length
+                while (splitIndex > 0 && (currentExpression[splitIndex - 1].isDigit() || currentExpression[splitIndex - 1] == '.')) {
+                    splitIndex--
                 }
+
+                val prefix = currentExpression.substring(0, splitIndex)
+                val number = currentExpression.substring(splitIndex)
+
+                val newExpression = when {
+                    prefix.endsWith("(-") -> prefix.dropLast(2) + number
+                    prefix == "-" -> number
+                    prefix.isEmpty() -> "-$number"
+                    else -> "$prefix(-$number"
+                }
+
+                _state.value = _state.value.copy(expression = newExpression, isResult = false)
             }
 
             is CalculatorAction.Parentheses -> {
