@@ -8,4 +8,5 @@ sealed interface CalculatorAction {
     data class Input(val value: String) : CalculatorAction
     object Clear : CalculatorAction
     object Calculate : CalculatorAction
+    object ToggleSign : CalculatorAction
 }

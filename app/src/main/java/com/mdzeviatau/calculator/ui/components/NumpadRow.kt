@@ -26,6 +26,7 @@ fun NumpadRow(
         when (text) {
             "AC" -> CalculatorAction.Clear
             "=" -> CalculatorAction.Calculate
+            "+/-" -> CalculatorAction.ToggleSign
             else -> CalculatorAction.Input(text)
         }
     }

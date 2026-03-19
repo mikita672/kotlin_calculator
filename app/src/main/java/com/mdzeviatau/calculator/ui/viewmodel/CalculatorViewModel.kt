@@ -17,26 +17,25 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.Input -> {
                 val inputVal = if (action.value == ",") "." else action.value
-                val finalInput = if (inputVal == "+/-") "-" else inputVal
                 val currentExpression = _state.value.expression
                 val symbols = listOf("+", "-", "*", "/", ".", "%")
 
-                if (currentExpression.isEmpty() && finalInput in listOf("+", "*", "/", ".", "-")) {
+                if (currentExpression.isEmpty() && inputVal in listOf("+", "*", "/", ".", "-")) {
                     return
                 }
 
                 if (currentExpression.isNotEmpty()) {
                     val lastChar = currentExpression.last().toString()
 
-                    if (finalInput in symbols && lastChar in symbols) {
+                    if (inputVal in symbols && lastChar in symbols) {
                         _state.value =
-                            _state.value.copy(expression = currentExpression.dropLast(1) + finalInput)
+                            _state.value.copy(expression = currentExpression.dropLast(1) + inputVal)
                         return
                     }
                 }
 
                 _state.value = _state.value.copy(
-                    expression = _state.value.expression + finalInput
+                    expression = _state.value.expression + inputVal
                 )
             }
 
@@ -53,6 +52,24 @@ class CalculatorViewModel : ViewModel() {
                     _state.value = _state.value.copy(expression = resultStr)
                 } catch (_: Exception) {
                     _state.value = _state.value.copy(expression = "Error")
+                }
+            }
+
+            is CalculatorAction.ToggleSign -> {
+                val currentExpression = _state.value.expression
+
+                if (currentExpression.isEmpty()) {
+                    return
+                }
+
+                if (currentExpression.startsWith("-")) {
+                    _state.value = _state.value.copy(
+                        expression = currentExpression.substring(1)
+                    )
+                } else {
+                    _state.value = _state.value.copy(
+                        expression = "-$currentExpression"
+                    )
                 }
             }
         }
