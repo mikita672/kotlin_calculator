@@ -18,8 +18,16 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.Input -> {
                 val inputVal = if (action.value == ",") "." else action.value
-                val currentExpression = _state.value.expression
                 val symbols = listOf("+", "-", "*", "/", ".", "%")
+                val operators = listOf("+", "-", "*", "/")
+
+                var currentExpression = _state.value.expression
+
+                if (_state.value.isResult) {
+                    if (inputVal !in operators) {
+                        currentExpression = ""
+                    }
+                }
 
                 if (currentExpression.isEmpty() && inputVal in listOf("+", "*", "/", ".", "-")) {
                     return
@@ -30,17 +38,21 @@ class CalculatorViewModel : ViewModel() {
 
                     if (inputVal in symbols && lastChar in symbols) {
                         _state.value =
-                            _state.value.copy(expression = currentExpression.dropLast(1) + inputVal)
+                            _state.value.copy(
+                                expression = currentExpression.dropLast(1) + inputVal,
+                                isResult = false
+                            )
                         return
                     }
                 }
 
                 _state.value = _state.value.copy(
-                    expression = _state.value.expression + inputVal
+                    expression = currentExpression + inputVal, isResult = false
                 )
             }
 
             is CalculatorAction.Calculate -> {
+                Log.d("Calculator", "Calculate button pressed")
                 try {
                     val expression = ExpressionBuilder(_state.value.expression).build()
                     val result = expression.evaluate()
@@ -50,26 +62,28 @@ class CalculatorViewModel : ViewModel() {
                         result.toString()
                     }
 
-                    _state.value = _state.value.copy(expression = resultStr)
+                    _state.value = _state.value.copy(expression = resultStr, isResult = true)
                 } catch (_: Exception) {
-                    _state.value = _state.value.copy(expression = "Error")
+                    _state.value = _state.value.copy(expression = "Error", isResult = true)
                 }
             }
 
             is CalculatorAction.ToggleSign -> {
+                Log.d("Toggle Sign", "Parentheses button pressed")
                 val currentExpression = _state.value.expression
 
                 if (currentExpression.isEmpty()) {
+                    _state.value = _state.value.copy(expression = "-", isResult = false)
                     return
                 }
 
                 if (currentExpression.startsWith("-")) {
                     _state.value = _state.value.copy(
-                        expression = currentExpression.substring(1)
+                        expression = currentExpression.substring(1), isResult = false
                     )
                 } else {
                     _state.value = _state.value.copy(
-                        expression = "-$currentExpression"
+                        expression = "-$currentExpression", isResult = false
                     )
                 }
             }
@@ -82,18 +96,19 @@ class CalculatorViewModel : ViewModel() {
                 val closeCount = currentExpression.count { it == ')' }
                 val lastChar = currentExpression.lastOrNull()
 
-                val toAdd = if (openCount > closeCount && lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
-                    ")"
-                } else {
-                    if (lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
-                        "*("
+                val toAdd =
+                    if (openCount > closeCount && lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                        ")"
                     } else {
-                        "("
+                        if (lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                            "*("
+                        } else {
+                            "("
+                        }
                     }
-                }
 
                 _state.value = _state.value.copy(
-                    expression = currentExpression + toAdd
+                    expression = currentExpression + toAdd, isResult = false
                 )
             }
         }
