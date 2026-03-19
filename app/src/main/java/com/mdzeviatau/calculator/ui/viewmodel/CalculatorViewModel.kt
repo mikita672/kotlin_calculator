@@ -11,6 +11,10 @@ class CalculatorViewModel : ViewModel() {
     val state = _state.asStateFlow()
 
     fun onAction(action: CalculatorAction) {
+        if (_state.value.expression == "Error" && action !is CalculatorAction.Clear) {
+            return
+        }
+
         when (action) {
             is CalculatorAction.Clear -> {
                 _state.value = CalculatorState(expression = "")
