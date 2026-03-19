@@ -1,5 +1,6 @@
 package com.mdzeviatau.calculator.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -71,6 +72,29 @@ class CalculatorViewModel : ViewModel() {
                         expression = "-$currentExpression"
                     )
                 }
+            }
+
+            is CalculatorAction.Parentheses -> {
+                Log.d("Calculator", "Parentheses button pressed")
+                val currentExpression = _state.value.expression
+
+                val openCount = currentExpression.count { it == '(' }
+                val closeCount = currentExpression.count { it == ')' }
+                val lastChar = currentExpression.lastOrNull()
+
+                val toAdd = if (openCount > closeCount && lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                    ")"
+                } else {
+                    if (lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                        "*("
+                    } else {
+                        "("
+                    }
+                }
+
+                _state.value = _state.value.copy(
+                    expression = currentExpression + toAdd
+                )
             }
         }
     }

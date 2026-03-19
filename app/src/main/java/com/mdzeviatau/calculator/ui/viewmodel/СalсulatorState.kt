@@ -9,4 +9,5 @@ sealed interface CalculatorAction {
     object Clear : CalculatorAction
     object Calculate : CalculatorAction
     object ToggleSign : CalculatorAction
+    object Parentheses : CalculatorAction
 }
