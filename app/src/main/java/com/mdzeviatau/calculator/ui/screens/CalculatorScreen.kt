@@ -18,6 +18,7 @@ import com.mdzeviatau.calculator.ui.components.Display
 import com.mdzeviatau.calculator.ui.components.Numpad
 import com.mdzeviatau.calculator.ui.components.RemoveButton
 import com.mdzeviatau.calculator.ui.theme.CalculatorTheme
+import com.mdzeviatau.calculator.ui.viewmodel.CalculatorAction
 import com.mdzeviatau.calculator.ui.viewmodel.CalculatorViewModel
 
 @Composable
@@ -35,7 +36,8 @@ fun CalculatorScreen(
             RemoveButton(
                 modifier = Modifier
                     .padding(top = 14.dp)
-                    .padding(end = 16.dp), onClick = {})
+                    .padding(end = 16.dp),
+                onClick = { viewModel.onAction(CalculatorAction.RemoveOneSymbol) })
             Numpad(modifier = Modifier.weight(1.5f), onAction = viewModel::onAction)
         }
     } else {
@@ -44,7 +46,9 @@ fun CalculatorScreen(
             RemoveButton(
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .align(Alignment.End), onClick = {})
+                    .align(Alignment.End), 
+                onClick = { viewModel.onAction(CalculatorAction.RemoveOneSymbol) }
+            )
             Numpad(modifier = Modifier.weight(2f), onAction = viewModel::onAction)
         }
     }

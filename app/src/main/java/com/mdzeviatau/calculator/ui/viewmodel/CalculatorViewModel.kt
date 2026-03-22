@@ -137,6 +137,17 @@ class CalculatorViewModel : ViewModel() {
                     expression = currentExpression + toAdd, isResult = false
                 )
             }
+
+            is CalculatorAction.RemoveOneSymbol -> {
+                Log.d("Calculator", "Remove One Symbol Button pressed")
+                val currentExpression = _state.value.expression
+                if (currentExpression.isNotEmpty()) {
+                    _state.value = _state.value.copy(
+                        expression = currentExpression.dropLast(1),
+                        isResult = false
+                    )
+                }
+            }
         }
     }
 }
