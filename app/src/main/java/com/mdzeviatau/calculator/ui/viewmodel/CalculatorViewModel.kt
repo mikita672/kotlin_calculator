@@ -10,6 +10,8 @@ class CalculatorViewModel : ViewModel() {
     private val _state = MutableStateFlow(CalculatorState())
     val state = _state.asStateFlow()
 
+    private var lastRemoveTime = 0L
+
     fun onAction(action: CalculatorAction) {
         if (_state.value.expression == "Error" && action !is CalculatorAction.Clear) {
             return
@@ -140,13 +142,19 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.RemoveOneSymbol -> {
                 Log.d("Calculator", "Remove One Symbol Button pressed")
-                val currentExpression = _state.value.expression
-                if (currentExpression.isNotEmpty()) {
-                    _state.value = _state.value.copy(
-                        expression = currentExpression.dropLast(1),
-                        isResult = false
-                    )
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastRemoveTime < 500) {
+                    _state.value = CalculatorState(expression = "")
+                } else {
+                    val currentExpression = _state.value.expression
+                    if (currentExpression.isNotEmpty()) {
+                        _state.value = _state.value.copy(
+                            expression = currentExpression.dropLast(1),
+                            isResult = false
+                        )
+                    }
                 }
+                lastRemoveTime = currentTime
             }
         }
     }
