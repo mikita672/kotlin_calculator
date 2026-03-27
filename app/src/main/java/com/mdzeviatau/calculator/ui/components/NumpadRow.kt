@@ -28,6 +28,7 @@ fun NumpadRow(
             "=" -> CalculatorAction.Calculate
             "+/-" -> CalculatorAction.ToggleSign
             "( )" -> CalculatorAction.Parentheses
+            "%" -> CalculatorAction.Percent
             else -> CalculatorAction.Input(text)
         }
     }

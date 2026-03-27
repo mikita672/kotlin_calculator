@@ -156,6 +156,10 @@ class CalculatorViewModel : ViewModel() {
                 }
                 lastRemoveTime = currentTime
             }
+
+            is CalculatorAction.Percent -> {
+                Log.d("Calculator", "Percent button pressed")
+            }
         }
     }
 }
