@@ -159,6 +159,47 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.Percent -> {
                 Log.d("Calculator", "Percent button pressed")
+                val currentExpression = _state.value.expression
+
+                if (currentExpression.isEmpty()) return
+
+                if (_state.value.isResult) {
+                    val number = currentExpression.toDoubleOrNull() ?: return
+                    val percentValue = number / 100.0
+
+                    val formatted = if (percentValue == percentValue.toLong().toDouble()) {
+                        percentValue.toLong().toString()
+                    } else {
+                        percentValue.toString()
+                    }
+
+                    _state.value = _state.value.copy(expression = formatted, isResult = true)
+                    return
+                }
+
+                var splitIndex = currentExpression.length
+                while (splitIndex > 0 && (currentExpression[splitIndex - 1].isDigit() || currentExpression[splitIndex - 1] == '.')) {
+                    splitIndex--
+                }
+
+                if (splitIndex == currentExpression.length) return
+
+                val prefix = currentExpression.substring(0, splitIndex)
+                val numberStr = currentExpression.substring(splitIndex)
+                
+                val number = numberStr.toDoubleOrNull() ?: return
+                val percentValue = number / 100.0
+
+                val formattedPercent = if (percentValue == percentValue.toLong().toDouble()) {
+                    percentValue.toLong().toString()
+                } else {
+                    percentValue.toString()
+                }
+
+                _state.value = _state.value.copy(
+                    expression = prefix + formattedPercent,
+                    isResult = false
+                )
             }
         }
     }
