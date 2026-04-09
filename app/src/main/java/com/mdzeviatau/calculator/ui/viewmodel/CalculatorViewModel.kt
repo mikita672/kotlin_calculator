@@ -43,7 +43,15 @@ class CalculatorViewModel : ViewModel() {
                     }
                 }
 
-                if (currentExpression.isEmpty() && inputVal in listOf("+", "*", "/", ".", "-")) {
+                if (currentExpression.isEmpty() && inputVal in listOf(
+                        "+",
+                        "*",
+                        "/",
+                        ".",
+                        "-",
+                        "^"
+                    )
+                ) {
                     return
                 }
 
