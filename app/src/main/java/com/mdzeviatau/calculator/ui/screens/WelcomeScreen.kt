@@ -1,5 +1,6 @@
 package com.mdzeviatau.calculator.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -19,6 +21,8 @@ import com.mdzeviatau.calculator.ui.theme.Secondary
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
+    val context = LocalContext.current
+    val activity = context as? Activity
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -57,5 +61,13 @@ fun WelcomeScreen(navController: NavController) {
         ) {
             Text("About", fontSize = 18.sp)
         }
+
+        Button(
+            onClick = { activity?.finish() },
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .padding(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Secondary)
+        ) { Text("Exit", fontSize = 18.sp) }
     }
 }
