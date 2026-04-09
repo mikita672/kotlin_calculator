@@ -5,6 +5,12 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.objecthunter.exp4j.ExpressionBuilder
+import net.objecthunter.exp4j.function.Function
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.math.tan
 
 class CalculatorViewModel : ViewModel() {
     private val _state = MutableStateFlow(CalculatorState())
@@ -87,7 +93,34 @@ class CalculatorViewModel : ViewModel() {
                         textToCalculate += ")".repeat(openCount - closeCount)
                     }
 
-                    val expression = ExpressionBuilder(textToCalculate).build()
+                    val builder = ExpressionBuilder(textToCalculate)
+
+                    val sinDeg = object : Function("sin", 1) {
+                        override fun apply(vararg args: Double): Double {
+                            val res = sin(Math.toRadians(args[0]))
+                            val rounded = res.roundToInt().toDouble()
+                            return if (abs(res - rounded) < 1e-10) rounded else res
+                        }
+                    }
+                    val cosDeg = object : Function("cos", 1) {
+                        override fun apply(vararg args: Double): Double {
+                            val res = cos(Math.toRadians(args[0]))
+                            val rounded = res.roundToInt().toDouble()
+                            return if (abs(res - rounded) < 1e-10) rounded else res
+                        }
+                    }
+                    val tanDeg = object : Function("tan", 1) {
+                        override fun apply(vararg args: Double): Double {
+                            if (args[0] % 180 == 90.0) throw ArithmeticException("Undefined")
+
+                            val res = tan(Math.toRadians(args[0]))
+                            val rounded = res.roundToInt().toDouble()
+                            return if (abs(res - rounded) < 1e-10) rounded else res
+                        }
+                    }
+
+                    builder.functions(sinDeg, cosDeg, tanDeg)
+                    val expression = builder.build()
                     val result = expression.evaluate()
 
                     val resultStr = if (result == result.toLong().toDouble()) {
@@ -217,6 +250,27 @@ class CalculatorViewModel : ViewModel() {
                 _state.value = _state.value.copy(
                     expression = prefix + formattedPercent, isResult = false
                 )
+            }
+
+            is CalculatorAction.ScientificFunction -> {
+                Log.d("Calculator", "Scientific button pressed")
+                var currentExpression = _state.value.expression
+
+                if (_state.value.isResult) {
+                    currentExpression = ""
+                }
+
+                val lastChar = currentExpression.lastOrNull()
+
+                val toAdd =
+                    if (lastChar != null && (lastChar.isDigit() || lastChar == ')' || lastChar == '.')) {
+                        "*${action.name}("
+                    } else {
+                        "${action.name}("
+                    }
+
+                _state.value =
+                    _state.value.copy(expression = currentExpression + toAdd, isResult = false)
             }
         }
     }

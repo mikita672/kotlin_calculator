@@ -7,6 +7,7 @@ data class CalculatorState(
 
 sealed interface CalculatorAction {
     data class Input(val value: String) : CalculatorAction
+    data class ScientificFunction(val name: String) : CalculatorAction
     object Clear : CalculatorAction
     object Calculate : CalculatorAction
     object ToggleSign : CalculatorAction
