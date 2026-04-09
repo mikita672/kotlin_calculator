@@ -40,14 +40,33 @@ class CalculatorViewModel : ViewModel() {
                 }
 
                 if (currentExpression.isNotEmpty()) {
-                    val lastChar = currentExpression.last().toString()
+                    val lastChar = currentExpression.last()
 
-                    if (inputVal in symbols && lastChar in symbols) {
-                        _state.value =
-                            _state.value.copy(
-                                expression = currentExpression.dropLast(1) + inputVal,
-                                isResult = false
+                    if (lastChar == ')') {
+                        if (inputVal == ".") {
+                            _state.value = _state.value.copy(
+                                expression = "$currentExpression*0.", isResult = false
                             )
+                            return
+                        } else if (inputVal.first().isDigit()) {
+                            _state.value = _state.value.copy(
+                                expression = "$currentExpression*$inputVal", isResult = false
+                            )
+                            return
+                        }
+                    }
+
+                    if (inputVal in symbols && lastChar.toString() in symbols) {
+                        _state.value = _state.value.copy(
+                            expression = currentExpression.dropLast(1) + inputVal, isResult = false
+                        )
+                        return
+                    }
+
+                    if (inputVal == "." && lastChar.toString() in operators) {
+                        _state.value = _state.value.copy(
+                            expression = currentExpression + "0.", isResult = false
+                        )
                         return
                     }
                 }
@@ -149,8 +168,7 @@ class CalculatorViewModel : ViewModel() {
                     val currentExpression = _state.value.expression
                     if (currentExpression.isNotEmpty()) {
                         _state.value = _state.value.copy(
-                            expression = currentExpression.dropLast(1),
-                            isResult = false
+                            expression = currentExpression.dropLast(1), isResult = false
                         )
                     }
                 }
@@ -186,7 +204,7 @@ class CalculatorViewModel : ViewModel() {
 
                 val prefix = currentExpression.substring(0, splitIndex)
                 val numberStr = currentExpression.substring(splitIndex)
-                
+
                 val number = numberStr.toDoubleOrNull() ?: return
                 val percentValue = number / 100.0
 
@@ -197,8 +215,7 @@ class CalculatorViewModel : ViewModel() {
                 }
 
                 _state.value = _state.value.copy(
-                    expression = prefix + formattedPercent,
-                    isResult = false
+                    expression = prefix + formattedPercent, isResult = false
                 )
             }
         }
