@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mdzeviatau.calculator.ui.viewmodel.CalculatorAction
 
 @Composable
@@ -20,6 +22,7 @@ fun NumpadRow(
     textColor: Color,
     bgColor: Color,
     opColor: Color,
+    fontSize: TextUnit = 25.sp,
     onAction: (CalculatorAction) -> Unit
 ) {
     val getAction: (String) -> CalculatorAction = { text ->
@@ -43,24 +46,28 @@ fun NumpadRow(
             textColor = textColor,
             containerColor = bgColor,
             modifier = btnModifier,
+            fontSize = fontSize,
             onClick = { onAction(getAction(t1)) })
         NumButton(
             text = t2,
             textColor = textColor,
             containerColor = bgColor,
             modifier = btnModifier,
+            fontSize = fontSize,
             onClick = { onAction(getAction(t2)) })
         NumButton(
             text = t3,
             textColor = textColor,
             containerColor = bgColor,
             modifier = btnModifier,
+            fontSize = fontSize,
             onClick = { onAction(getAction(t3)) })
         NumButton(
             text = t4,
             textColor = Color.White,
             containerColor = opColor,
             modifier = btnModifier,
+            fontSize = fontSize,
             onClick = { onAction(getAction(t4)) })
     }
 }

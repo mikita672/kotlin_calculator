@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mdzeviatau.calculator.ui.components.AdvancedNumpad
 import com.mdzeviatau.calculator.ui.components.Display
 import com.mdzeviatau.calculator.ui.components.Numpad
 import com.mdzeviatau.calculator.ui.components.RemoveButton
@@ -50,7 +51,10 @@ fun AdvancedCalculatorScreen(
                     .padding(top = 14.dp)
                     .padding(end = 16.dp),
                 onClick = { viewModel.onAction(CalculatorAction.RemoveOneSymbol) })
-            Numpad(modifier = Modifier.weight(1.5f), onAction = viewModel::onAction)
+            Column(Modifier.weight(1.5f)) {
+                AdvancedNumpad(modifier = Modifier.weight(0.3f), onAction = viewModel::onAction)
+                Numpad(modifier = Modifier.weight(0.7f), onAction = viewModel::onAction)
+            }
         }
     } else {
         Column(modifier = modifier) {
@@ -61,7 +65,8 @@ fun AdvancedCalculatorScreen(
                     .align(Alignment.End),
                 onClick = { viewModel.onAction(CalculatorAction.RemoveOneSymbol) }
             )
-            Numpad(modifier = Modifier.weight(2f), onAction = viewModel::onAction)
+            AdvancedNumpad(modifier = Modifier.weight(0.5f), onAction = viewModel::onAction)
+            Numpad(modifier = Modifier.weight(1.4f), onAction = viewModel::onAction)
         }
     }
 }
