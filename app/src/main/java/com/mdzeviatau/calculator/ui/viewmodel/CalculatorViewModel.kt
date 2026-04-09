@@ -113,7 +113,12 @@ class CalculatorViewModel : ViewModel() {
                     }
                     val tanDeg = object : Function("tan", 1) {
                         override fun apply(vararg args: Double): Double {
-                            if (args[0] % 180 == 90.0) throw ArithmeticException("Undefined")
+                            val absoluteDeg = abs(args[0] % 180)
+                            if (absoluteDeg == 90.0) throw ArithmeticException("Undefined")
+
+                            if (abs(absoluteDeg - 90.0) < 1e-10) {
+                                throw ArithmeticException("Undefined")
+                            }
 
                             val res = tan(Math.toRadians(args[0]))
                             val rounded = res.roundToInt().toDouble()
