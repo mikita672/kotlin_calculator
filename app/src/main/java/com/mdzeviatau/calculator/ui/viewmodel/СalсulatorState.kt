@@ -14,4 +14,5 @@ sealed interface CalculatorAction {
     object Parentheses : CalculatorAction
     object RemoveOneSymbol : CalculatorAction
     object Percent : CalculatorAction
+    object Square : CalculatorAction
 }

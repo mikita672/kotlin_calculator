@@ -33,6 +33,8 @@ fun NumpadRow(
             "( )" -> CalculatorAction.Parentheses
             "%" -> CalculatorAction.Percent
             "sin", "cos", "tan", "sqrt", "ln", "log" -> CalculatorAction.ScientificFunction(text)
+            "x^2" -> CalculatorAction.Square
+            "x^y" -> CalculatorAction.Input("^")
             else -> CalculatorAction.Input(text)
         }
     }

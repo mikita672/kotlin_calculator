@@ -32,8 +32,8 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.Input -> {
                 val inputVal = if (action.value == ",") "." else action.value
-                val symbols = listOf("+", "-", "*", "/", ".", "%")
-                val operators = listOf("+", "-", "*", "/")
+                val symbols = listOf("+", "-", "*", "/", ".", "%", "^")
+                val operators = listOf("+", "-", "*", "/", "^")
 
                 var currentExpression = _state.value.expression
 
@@ -287,6 +287,20 @@ class CalculatorViewModel : ViewModel() {
 
                 _state.value =
                     _state.value.copy(expression = currentExpression + toAdd, isResult = false)
+            }
+
+            is CalculatorAction.Square -> {
+                Log.d("Calculator", "Square button pressed")
+                val currentExpression = _state.value.expression
+
+                if (currentExpression.isEmpty()) return
+
+                val lastChar = currentExpression.last()
+
+                if (lastChar.isDigit() || lastChar == '.' || lastChar == ')') {
+                    _state.value =
+                        _state.value.copy(expression = "$currentExpression^2", isResult = false)
+                }
             }
         }
     }
