@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,18 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mdzeviatau.calculator.ui.components.Display
 import com.mdzeviatau.calculator.ui.components.Numpad
 import com.mdzeviatau.calculator.ui.components.RemoveButton
-import com.mdzeviatau.calculator.ui.theme.CalculatorTheme
 import com.mdzeviatau.calculator.ui.viewmodel.CalculatorAction
 import com.mdzeviatau.calculator.ui.viewmodel.CalculatorViewModel
 
 @Composable
-fun CalculatorScreen(
+fun SimpleCalculatorScreen(
     modifier: Modifier = Modifier, viewModel: CalculatorViewModel = viewModel<CalculatorViewModel>()
 ) {
     val state by viewModel.state.collectAsState()
@@ -66,14 +63,5 @@ fun CalculatorScreen(
             )
             Numpad(modifier = Modifier.weight(2f), onAction = viewModel::onAction)
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun NumpadPreview() {
-    CalculatorTheme {
-        CalculatorScreen(modifier = Modifier.fillMaxSize())
     }
 }

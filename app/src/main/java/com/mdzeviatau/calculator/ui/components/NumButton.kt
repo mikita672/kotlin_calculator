@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 
@@ -15,6 +16,7 @@ fun NumButton(
     text: String,
     textColor: Color,
     containerColor: Color,
+    fontSize: TextUnit = 25.sp,
     onClick: () -> Unit
 ) {
     Button(
@@ -22,6 +24,6 @@ fun NumButton(
             containerColor = containerColor, contentColor = textColor
         )
     ) {
-        Text(text, fontSize = 30.sp)
+        Text(text, fontSize = fontSize)
     }
 }

@@ -5,7 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mdzeviatau.calculator.ui.screens.AboutScreen
-import com.mdzeviatau.calculator.ui.screens.CalculatorScreen
+import com.mdzeviatau.calculator.ui.screens.AdvancedCalculatorScreen
+import com.mdzeviatau.calculator.ui.screens.SimpleCalculatorScreen
 import com.mdzeviatau.calculator.ui.screens.WelcomeScreen
 
 @Composable
@@ -18,7 +19,11 @@ fun Navigation() {
         }
 
         composable(Screen.SimpleCalc.route) {
-            CalculatorScreen()
+            SimpleCalculatorScreen()
+        }
+
+        composable(Screen.AdvancedCalc.route) {
+            AdvancedCalculatorScreen()
         }
 
         composable(Screen.About.route) {
