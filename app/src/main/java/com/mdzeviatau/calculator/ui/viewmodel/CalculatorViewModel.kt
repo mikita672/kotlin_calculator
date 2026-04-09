@@ -8,6 +8,8 @@ import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.function.Function
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.ln
+import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.tan
@@ -119,7 +121,21 @@ class CalculatorViewModel : ViewModel() {
                         }
                     }
 
-                    builder.functions(sinDeg, cosDeg, tanDeg)
+                    val lnFunc = object : Function("ln", 1) {
+                        override fun apply(vararg args: Double): Double {
+                            if (args[0] <= 0) throw ArithmeticException("Domain error")
+                            return ln(args[0])
+                        }
+                    }
+
+                    val logFunc = object : Function("log", 1) {
+                        override fun apply(vararg args: Double): Double {
+                            if (args[0] <= 0) throw ArithmeticException("Domain error")
+                            return log10(args[0])
+                        }
+                    }
+
+                    builder.functions(sinDeg, cosDeg, tanDeg, lnFunc, logFunc)
                     val expression = builder.build()
                     val result = expression.evaluate()
 

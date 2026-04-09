@@ -32,7 +32,7 @@ fun NumpadRow(
             "+/-" -> CalculatorAction.ToggleSign
             "( )" -> CalculatorAction.Parentheses
             "%" -> CalculatorAction.Percent
-            "sin", "cos", "tan", "sqrt" -> CalculatorAction.ScientificFunction(text)
+            "sin", "cos", "tan", "sqrt", "ln", "log" -> CalculatorAction.ScientificFunction(text)
             else -> CalculatorAction.Input(text)
         }
     }
