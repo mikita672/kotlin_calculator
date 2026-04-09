@@ -34,7 +34,7 @@ fun AdvancedCalculatorScreen(
         if (state.expression == "Error") {
             Toast.makeText(
                 context,
-                "Cannot divide by 0 or incorrect expression",
+                "Undefined expression",
                 Toast.LENGTH_SHORT
             ).show()
         }
