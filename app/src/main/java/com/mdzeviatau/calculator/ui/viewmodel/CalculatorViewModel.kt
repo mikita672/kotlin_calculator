@@ -27,7 +27,7 @@ class CalculatorViewModel : ViewModel() {
 
         when (action) {
             is CalculatorAction.Clear -> {
-                _state.value = CalculatorState(expression = "0")
+                _state.value = CalculatorState(expression = "")
             }
 
             is CalculatorAction.Input -> {
@@ -43,11 +43,13 @@ class CalculatorViewModel : ViewModel() {
                     }
                 }
 
-                if (currentExpression.isEmpty() && inputVal in listOf(
-                        "+", "*", "/", ".", "-", "^"
-                    )
-                ) {
-                    return
+                if (currentExpression.isEmpty()) {
+                    if (inputVal in symbols) {
+                        _state.value = _state.value.copy(
+                            expression = "0$inputVal"
+                        )
+                        return
+                    }
                 }
 
                 if (currentExpression.isNotEmpty()) {

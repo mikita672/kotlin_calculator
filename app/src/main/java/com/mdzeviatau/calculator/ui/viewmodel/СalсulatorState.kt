@@ -1,7 +1,7 @@
 package com.mdzeviatau.calculator.ui.viewmodel
 
 data class CalculatorState(
-    val expression: String = "0",
+    val expression: String = "",
     val isResult: Boolean = false
 )
 
