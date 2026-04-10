@@ -224,13 +224,25 @@ class CalculatorViewModel : ViewModel() {
             is CalculatorAction.RemoveOneSymbol -> {
                 Log.d("Calculator", "Remove One Symbol Button pressed")
                 val currentTime = System.currentTimeMillis()
+
                 if (currentTime - lastRemoveTime < 500) {
                     _state.value = CalculatorState(expression = "")
                 } else {
                     val currentExpression = _state.value.expression
                     if (currentExpression.isNotEmpty()) {
+                        val functionsSymbols =
+                            listOf("sin(", "cos(", "tan(", "sqrt(", "ln(", "log(")
+
+                        val matchedChunk = functionsSymbols.find { currentExpression.endsWith(it) }
+
+                        val newExpression = if (matchedChunk != null) {
+                            currentExpression.dropLast(matchedChunk.length)
+                        } else {
+                            currentExpression.dropLast(1)
+                        }
+
                         _state.value = _state.value.copy(
-                            expression = currentExpression.dropLast(1), isResult = false
+                            expression = newExpression, isResult = false
                         )
                     }
                 }
