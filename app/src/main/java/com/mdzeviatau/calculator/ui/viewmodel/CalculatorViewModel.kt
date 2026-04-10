@@ -44,12 +44,7 @@ class CalculatorViewModel : ViewModel() {
                 }
 
                 if (currentExpression.isEmpty() && inputVal in listOf(
-                        "+",
-                        "*",
-                        "/",
-                        ".",
-                        "-",
-                        "^"
+                        "+", "*", "/", ".", "-", "^"
                     )
                 ) {
                     return
@@ -321,10 +316,16 @@ class CalculatorViewModel : ViewModel() {
                 if (currentExpression.isEmpty()) return
 
                 val lastChar = currentExpression.last()
+                val operators = listOf("+", "-", "*", "/", "^")
 
                 if (lastChar.isDigit() || lastChar == '.' || lastChar == ')') {
-                    _state.value =
-                        _state.value.copy(expression = "$currentExpression^2", isResult = false)
+                    _state.value = _state.value.copy(
+                        expression = "$currentExpression^2", isResult = false
+                    )
+                } else if (lastChar.toString() in operators) {
+                    _state.value = _state.value.copy(
+                        expression = currentExpression.dropLast(1) + "^2", isResult = false
+                    )
                 }
             }
         }
