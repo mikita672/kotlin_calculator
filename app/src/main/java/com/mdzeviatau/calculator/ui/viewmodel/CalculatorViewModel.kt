@@ -27,7 +27,7 @@ class CalculatorViewModel : ViewModel() {
 
         when (action) {
             is CalculatorAction.Clear -> {
-                _state.value = CalculatorState(expression = "")
+                _state.value = CalculatorState(expression = "0")
             }
 
             is CalculatorAction.Input -> {
