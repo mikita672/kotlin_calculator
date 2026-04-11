@@ -21,7 +21,7 @@ class CalculatorViewModel : ViewModel() {
     private var lastRemoveTime = 0L
 
     fun onAction(action: CalculatorAction) {
-        if (_state.value.expression == "Error" && action !is CalculatorAction.Clear) {
+        if ((_state.value.expression == "Error" || _state.value.expression == "NaN") && action !is CalculatorAction.Clear) {
             return
         }
 
@@ -54,6 +54,39 @@ class CalculatorViewModel : ViewModel() {
 
                 if (currentExpression.isNotEmpty()) {
                     val lastChar = currentExpression.last()
+
+                    if (inputVal.first().isDigit()) {
+                        val isStandaloneZero =
+                            currentExpression == "0" || (currentExpression.endsWith("0") && currentExpression.length > 1 && (currentExpression[currentExpression.length - 2].toString() in operators || currentExpression[currentExpression.length - 2] == '('))
+
+                        if (isStandaloneZero) {
+                            if (inputVal == "0") {
+                                return
+                            } else {
+                                _state.value = _state.value.copy(
+                                    expression = currentExpression.dropLast(1) + inputVal,
+                                    isResult = false
+                                )
+                                return
+                            }
+                        }
+                    }
+
+                    if (inputVal == ".") {
+                        var hasDecimal = false
+
+                        for (i in currentExpression.indices.reversed()) {
+                            val char = currentExpression[i]
+                            if (char == '.') {
+                                hasDecimal = true
+                                break
+                            }
+                            if (char.toString() in operators || char == '(' || char == ')' || char == '%') {
+                                break
+                            }
+                        }
+                        if (hasDecimal) return
+                    }
 
                     if (lastChar == ')') {
                         if (inputVal == ".") {
