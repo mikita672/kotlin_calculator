@@ -31,7 +31,7 @@ fun AdvancedCalculatorScreen(
     val context = LocalContext.current
 
     LaunchedEffect(state.expression) {
-        if (state.expression == "Error") {
+        if (state.expression == "Error" || state.expression == "NaN") {
             Toast.makeText(
                 context,
                 "Undefined expression",

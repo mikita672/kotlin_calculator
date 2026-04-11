@@ -21,7 +21,7 @@ class CalculatorViewModel : ViewModel() {
     private var lastRemoveTime = 0L
 
     fun onAction(action: CalculatorAction) {
-        if (_state.value.expression == "Error" && action !is CalculatorAction.Clear) {
+        if ((_state.value.expression == "Error" || _state.value.expression == "NaN") && action !is CalculatorAction.Clear) {
             return
         }
 
