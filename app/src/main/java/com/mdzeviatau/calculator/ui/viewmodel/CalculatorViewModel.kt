@@ -331,14 +331,17 @@ class CalculatorViewModel : ViewModel() {
                     currentExpression = ""
                 }
 
+                if (currentExpression.endsWith(".")) {
+                    currentExpression = currentExpression.dropLast(1)
+                }
+
                 val lastChar = currentExpression.lastOrNull()
 
-                val toAdd =
-                    if (lastChar != null && (lastChar.isDigit() || lastChar == ')' || lastChar == '.')) {
-                        "*${action.name}("
-                    } else {
-                        "${action.name}("
-                    }
+                val toAdd = if (lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                    "*${action.name}("
+                } else {
+                    "${action.name}("
+                }
 
                 _state.value =
                     _state.value.copy(expression = currentExpression + toAdd, isResult = false)
@@ -346,14 +349,19 @@ class CalculatorViewModel : ViewModel() {
 
             is CalculatorAction.Square -> {
                 Log.d("Calculator", "Square button pressed")
-                val currentExpression = _state.value.expression
+
+                var currentExpression = _state.value.expression
 
                 if (currentExpression.isEmpty()) return
+
+                if (currentExpression.endsWith(".")) {
+                    currentExpression = currentExpression.dropLast(1)
+                }
 
                 val lastChar = currentExpression.last()
                 val operators = listOf("+", "-", "*", "/", "^")
 
-                if (lastChar.isDigit() || lastChar == '.' || lastChar == ')') {
+                if (lastChar.isDigit() || lastChar == ')') {
                     _state.value = _state.value.copy(
                         expression = "$currentExpression^2", isResult = false
                     )
