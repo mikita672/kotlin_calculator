@@ -55,6 +55,22 @@ class CalculatorViewModel : ViewModel() {
                 if (currentExpression.isNotEmpty()) {
                     val lastChar = currentExpression.last()
 
+                    if (inputVal == ".") {
+                        var hasDecimal = false
+
+                        for (i in currentExpression.indices.reversed()) {
+                            val char = currentExpression[i]
+                            if (char == '.') {
+                                hasDecimal = true
+                                break
+                            }
+                            if (char.toString() in operators || char == '(' || char == ')' || char == '%') {
+                                break
+                            }
+                        }
+                        if (hasDecimal) return
+                    }
+
                     if (lastChar == ')') {
                         if (inputVal == ".") {
                             _state.value = _state.value.copy(
